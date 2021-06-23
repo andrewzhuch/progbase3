@@ -9,7 +9,7 @@
     <author>
       <id>2</id>
       <username>xxxxxx</username>
-      <password>lllllll</password>
+      <password>ff</password>
       <age>15</age>
       <registeredAt>2005-08-10T01:01:42+03:00</registeredAt>
     </author>
@@ -56,7 +56,7 @@
       <User>
         <id>2</id>
         <username>xxxxxx</username>
-        <password>lllllll</password>
+        <password>ff</password>
         <age>15</age>
         <registeredAt>2005-08-10T01:01:42+03:00</registeredAt>
       </User>

@@ -34,6 +34,30 @@ namespace DataProcessor
                 return null;
             }
         }
+        public User GetUserByNameAndPassword(string name, string password)
+        {
+            SqliteCommand command = this._connection.CreateCommand();
+            command.CommandText = @"SELECT * FROM users WHERE password = $password AND username = $username";
+            command.Parameters.AddWithValue("$password", password);
+            command.Parameters.AddWithValue("$username", name);
+            SqliteDataReader reader = command.ExecuteReader();
+            if(reader.Read())
+            {
+                User user = new User();
+                user.id = long.Parse(reader.GetString(0));
+                user.username = reader.GetString(1);
+                user.password = reader.GetString(2);
+                user.age = int.Parse(reader.GetString(3));
+                user.registeredAt = DateTime.Parse(reader.GetString(4));
+                reader.Close();
+                return user;
+            }
+            else
+            {
+                reader.Close();
+                return null;
+            }     
+        }
         public bool DeleteById(long id)
         {
             SqliteCommand command = this._connection.CreateCommand();

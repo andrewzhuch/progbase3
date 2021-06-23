@@ -43,6 +43,37 @@ namespace DataProcessor
             int nChanges = command.ExecuteNonQuery();
             return nChanges == 1;
         }
+        public List<DataProcessor.Lecture> GetPage(int pageNumber)
+        {
+            const int pageSize = 3;
+            SqliteCommand command = this._connection.CreateCommand();
+            command.CommandText = @"SELECT * FROM lectures LIMIT $pageSize OFFSET $pageSize * ($pageNumber - 1)";
+            command.Parameters.AddWithValue("$pageSize", pageSize);
+            command.Parameters.AddWithValue("$pageNumber", pageNumber);
+            SqliteDataReader reader = command.ExecuteReader();
+            List<DataProcessor.Lecture> lectures = new List<DataProcessor.Lecture>();
+            while(reader.Read())
+            {
+                DataProcessor.Lecture Lecture = new DataProcessor.Lecture();
+                Lecture.id = int.Parse(reader.GetString(0));
+                Lecture.name = reader.GetString(1);
+                Lecture.topic = reader.GetString(2);
+                CourseRepo repo1 = new CourseRepo(this._connection);
+                Lecture.createdAt = DateTime.Parse(reader.GetString(3));
+                Lecture.cource = repo1.GetCourseByID(long.Parse(reader.GetString(4)));
+                lectures.Add(Lecture);
+            }
+            reader.Close();
+            return lectures;
+        }
+        public int GetTotalPages()
+        {
+            SqliteCommand command = this._connection.CreateCommand();
+            command.CommandText = @"SELECT COUNT(*) FROM lectures";
+            long count = (long)command.ExecuteScalar();
+            const int pageSize = 3;
+            return (int)Math.Ceiling(count / (double)pageSize);
+        }
         public long InsertLecture(Lecture lecture)
         {
             SqliteCommand command = this._connection.CreateCommand();
