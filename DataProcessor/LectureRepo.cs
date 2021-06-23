@@ -117,7 +117,9 @@ namespace DataProcessor
                 lecture.id = long.Parse(reader.GetString(0));
                 lecture.name = reader.GetString(1);
                 lecture.topic = reader.GetString(2);
+                CourseRepo repo1 = new CourseRepo(this._connection);
                 lecture.createdAt = DateTime.Parse(reader.GetString(3));
+                lecture.cource = repo1.GetCourseByID(long.Parse(reader.GetString(4)));
                 lectures.Add(lecture);
             }
             reader.Close();
